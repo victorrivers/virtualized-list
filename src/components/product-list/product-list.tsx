@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
-import { User } from "eos-lib/models/user";
+import { Product } from "eos-lib/models/product";
 import { Spinner } from "../spinner/spinner";
+import VirtualizedList from "../virtualized-list/virtualized-list";
 
-export function UserList() {
-	const [data, setData] = useState<User[] | null>(null);
+export function ProductList() {
+	const [data, setData] = useState<Product[] | null>(null);
 	const [isLoading, setLoading] = useState(false);
 
 	useEffect(() => {
 		setLoading(true);
-		fetch("/api/users")
+		fetch("/api/products")
 			.then((res) => res.json())
 			.then((data) => {
 				setData(data);
@@ -19,14 +20,5 @@ export function UserList() {
 	if (isLoading) return <Spinner />;
 	if (!data) return <p>No data</p>;
 
-	return (
-		<div>
-			<ul>
-				{data.slice(0, 10).map((u) => (
-					<li key={u.id}>{`${u.firstName} - ${u.lastName}`}</li>
-				))}
-			</ul>
-			Total items: {data.length}
-		</div>
-	);
+	return <VirtualizedList items={data} itemHeight={50} />;
 }
