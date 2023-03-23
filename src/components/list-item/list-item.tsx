@@ -8,17 +8,23 @@ export type ListItemProps = {
 	index: number;
 };
 
-export default function ListItem({ item, height, index }: ListItemProps) {
+export default function ListItem({
+	item,
+	height,
+	index,
+}: ListItemProps): JSX.Element {
 	return (
 		<li className={styles.item} style={{ height, top: index * height }}>
-			<p className={styles.col}>{index}</p>
-			<p className={styles.col}>
-				<span>{item.name}</span>
-			</p>
-			<p className={styles.col}>
+			<div className={styles.col}>
+				<div>
+					<div>{item.name}</div>
+					<small className={styles.small}>{`Item # ${index}`}</small>
+				</div>
+			</div>
+			<div className={styles.col}>
 				<span>{item.material}</span>
-			</p>
-			<p className={styles.col}>{item.price}</p>
+			</div>
+			<div className={styles.col}>{item.price}</div>
 		</li>
 	);
 }

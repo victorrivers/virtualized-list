@@ -1,7 +1,10 @@
+import { useState } from "react";
 import { UserAction } from "eos-lib/models/user-action";
 import { Inter } from "next/font/google";
-import { useState } from "react";
-import { ProductList } from "../product-list/product-list";
+import { useFetchProducts } from "eos-lib/utils/hooks";
+import { Spinner } from "../spinner/spinner";
+import VirtualizedList from "../virtualized-list/virtualized-list";
+import styles from "./layout.module.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,18 +19,55 @@ export default function Layout(): JSX.Element {
 		setUserAction({ type: "scroll-top", timeStamp: Date.now() });
 	}
 
-	return (
-		<div className={inter.className}>
-			<header>
-				<h1>Virtualized List</h1>
+	const { isLoading, data } = useFetchProducts(userAction);
+
+	let addNewEntryButton;
+	let content;
+	let footer;
+
+	if (isLoading) {
+		content = (
+			<div className={styles.spinner}>
+				<Spinner />
+			</div>
+		);
+	} else {
+		if (data) {
+			addNewEntryButton = (
 				<button onClick={handleNewEntry}>Add new item</button>
+			);
+
+			content = (
+				<VirtualizedList
+					items={data}
+					itemHeight={100}
+					userAction={userAction}
+				/>
+			);
+
+			footer = (
+				<footer className={styles.footer}>
+					<button onClick={handleScrollToTop}>Scroll to Top</button>
+				</footer>
+			);
+		} else {
+			content = <p>No data</p>;
+		}
+	}
+
+	return (
+		<div className={`${inter.className} ${styles.container}`}>
+			<header className={styles.header}>
+				<div className={styles.headerItem} />
+				<h1 className={`${styles.headerItem} ${styles.textAlignCenter}`}>
+					Virtualized List
+				</h1>
+				<div className={`${styles.headerItem} ${styles.alignRight}`}>
+					{addNewEntryButton}
+				</div>
 			</header>
-			<main>
-				<ProductList userAction={userAction} />
-			</main>
-			<footer>
-				<button onClick={handleScrollToTop}>Scroll to Top</button>
-			</footer>
+			<main>{content}</main>
+			{footer}
 		</div>
 	);
 }

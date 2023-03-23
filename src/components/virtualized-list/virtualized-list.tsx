@@ -19,7 +19,7 @@ export default function VirtualizedList({
 	items,
 	itemHeight,
 	userAction,
-}: VirtualizedListProps) {
+}: VirtualizedListProps): JSX.Element {
 	const [visibleItems, setVisibleItems] = useState<VisibleProduct[]>(
 		items.slice(0, 6).map((item, index) => {
 			return { ...item, position: index };

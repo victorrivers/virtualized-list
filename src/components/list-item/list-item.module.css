@@ -21,9 +21,6 @@
 
 .col:nth-child(1) {
 	border-left: 0;
-	display: flex;
-	flex-direction: row;
-	justify-content: space-evenly;
 }
 
 .col:nth-child(2) {
@@ -31,14 +28,11 @@
 	border-left: 0;
 }
 
-.span {
-	overflow: hidden;
-	text-overflow: ellipsis;
-	width: 100%;
-	max-width: 250px;
-	max-height: 70px;
-}
-
 .col:nth-child(3) {
 	border-right: 0;
+}
+
+.small {
+	color: #2d2c2c;
+	font-size: 0.85rem;
 }

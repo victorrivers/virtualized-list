@@ -9,11 +9,10 @@ type VirtualizedListHeaderProps = {
 export default function VirtualizedListHeader({
 	columns,
 	className = "",
-}: VirtualizedListHeaderProps) {
+}: VirtualizedListHeaderProps): JSX.Element {
 	const [id, name, material, price] = columns;
 	return (
 		<div className={`${styles.header} ${className}`}>
-			<div className={styles.col}>{capitalize(id)}</div>
 			<div className={styles.col}>{capitalize(name)}</div>
 			<div className={styles.col}>{capitalize(price)}</div>
 			<div className={styles.col}>{capitalize(material)}</div>
