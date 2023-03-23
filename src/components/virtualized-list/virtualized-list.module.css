@@ -1,20 +1,20 @@
 .container {
-	border: 0.25rem solid var(--border-default-color);
-	width: var(--list-width);
-	height: 64vh;
+  border: 0.25rem solid var(--border-default-color);
+  width: var(--list-width);
+  height: 64vh;
 }
 
 .listContainer {
-	width: 100%;
-	height: calc(100% - var(--list-header-height));
-	overflow-y: scroll;
-	scroll-behavior: smooth;
+  width: 100%;
+  height: calc(100% - var(--list-header-height));
+  overflow-y: scroll;
+  scroll-behavior: smooth;
 }
 
 .list {
-	position: relative;
+  position: relative;
 }
 
 .listHeader {
-	height: var(--list-header-height);
+  height: var(--list-header-height);
 }
