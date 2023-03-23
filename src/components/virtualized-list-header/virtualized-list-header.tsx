@@ -12,7 +12,7 @@ export default function VirtualizedListHeader({
 }: VirtualizedListHeaderProps): JSX.Element {
   const [id, name, material, price] = columns;
   return (
-    <div className={styles.scrollOffset} style={{ overflowY: "scroll" }}>
+    <div className={styles.container}>
       <div className={`${styles.header} ${className}`}>
         <div className={styles.col}>{capitalize(name)}</div>
         <div className={styles.col}>{capitalize(price)}</div>

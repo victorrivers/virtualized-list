@@ -23,15 +23,19 @@
   border-right: 0;
 }
 
-.scrollOffset::-webkit-scrollbar {
+.container {
+	overflow-y: scroll;
+}
+
+.container::-webkit-scrollbar {
   width: 1em;
 }
 
-.scrollOffset::-webkit-scrollbar-track {
+.container::-webkit-scrollbar-track {
 	box-shadow: inset 0 calc(var(--border-width-medium) * -1) 0 #000000;
 }
 
-.scrollOffset::-webkit-scrollbar-thumb {
+.container::-webkit-scrollbar-thumb {
   background-color: #FFFFFF;
   outline: none;
 }
