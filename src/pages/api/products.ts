@@ -8,7 +8,5 @@ export default function handler(
 ) {
 	res
 		.status(200)
-		.json(
-			Array.from({ length: 120000 }).map((_, index) => createProduct(index))
-		);
+		.json(Array.from({ length: 1200 }).map((_, index) => createProduct(index)));
 }

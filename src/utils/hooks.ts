@@ -1,7 +1,7 @@
 import { Product } from "eos-lib/models/product";
 import { UserAction } from "eos-lib/models/user-action";
 import { useEffect, useState } from "react";
-import { createProduct } from "./utils";
+import { createProduct, getAllProducts } from "./utils";
 
 export function useFetchProducts(userAction?: UserAction) {
 	const [data, setData] = useState<Product[] | null>(null);
@@ -9,12 +9,10 @@ export function useFetchProducts(userAction?: UserAction) {
 
 	useEffect(() => {
 		setLoading(true);
-		fetch("/api/products")
-			.then((res) => res.json())
-			.then((data) => {
-				setData(data);
-				setLoading(false);
-			});
+		getAllProducts().then((data) => {
+			setData(data);
+			setLoading(false);
+		});
 	}, []);
 
 	useEffect(() => {

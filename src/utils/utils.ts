@@ -9,3 +9,7 @@ export function createProduct(id: number): Product {
 		material: faker.commerce.productMaterial(),
 	};
 }
+
+export async function getAllProducts(): Promise<Product[]> {
+	return Array.from({ length: 120000 }).map((_, index) => createProduct(index));
+}
