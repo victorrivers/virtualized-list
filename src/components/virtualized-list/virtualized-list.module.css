@@ -1,17 +1,24 @@
 .container {
-	border: 4px solid #FFFFFF;
+	/* border: 4px solid var(--border-default-color); */
+	border: 0.4rem solid fuchsia;
+	width: 90vw;
+	height: 50vh;
 }
 
-.outerContainer {
-	height: 500px;
+.listContainer {
+	width: 100%;
+	height: calc(100% - var(--list-header-height));
 	overflow-y: scroll;
-	width: 900px;
 	scroll-behavior: smooth;
 }
 
 .list {
-	border: 1px solid #FFFFFF;
+	border: 1px solid var(--border-default-color);
 	position: relative;
+}
+
+.listHeader {
+	height: var(--list-header-height);
 }
 
 .button {

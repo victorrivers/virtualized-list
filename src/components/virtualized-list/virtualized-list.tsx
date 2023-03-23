@@ -2,103 +2,91 @@ import React, { useState, useRef, useEffect, useMemo } from "react";
 import ListItem from "../list-item/list-item";
 import VirtualizedListHeader from "../virtualized-list-header/virtualized-list-header";
 import { Product } from "eos-lib/models/product";
+import { UserAction } from "eos-lib/models/user-action";
 import styles from "./virtualized-list.module.css";
-import { useDebounce } from "eos-lib/utils/hooks";
 
-type VirtualizedListProps = {
-  items: Product[];
-  itemHeight: number;
-};
-
-interface VisibleProduct extends Product {
-  position: number;
+interface VirtualizedListProps {
+	items: Product[];
+	itemHeight: number;
+	userAction?: UserAction;
 }
 
-const itemOffset = 400;
+type VisibleProduct = Product & {
+	position: number;
+};
+
 export default function VirtualizedList({
-  items,
-  itemHeight,
+	items,
+	itemHeight,
+	userAction,
 }: VirtualizedListProps) {
-  const [visibleItems, setVisibleItems] = useState<VisibleProduct[]>(
-    items.slice(0, 6).map((item, index) => {
-      return { ...item, position: index };
-    })
-  );
-  const [scroll, setScroll] = useState<number>(0);
+	const [visibleItems, setVisibleItems] = useState<VisibleProduct[]>(
+		items.slice(0, 6).map((item, index) => {
+			return { ...item, position: index };
+		})
+	);
+	const [scroll, setScroll] = useState<number>(0);
 
-  const outerContainerRef = useRef<HTMLDivElement>(null);
-  const listContainerHeight = items.length * itemHeight;
+	const listContainerRef = useRef<HTMLDivElement>(null);
+	const listContainerHeight = items.length * itemHeight;
 
-  const [value, setValue] = useState<number>(0);
-  const debouncedValue = useDebounce<number>(value, 500);
+	function handleScroll() {
+		const listContainer = listContainerRef.current;
+		if (listContainer !== null) {
+			const scrollTop = listContainer.scrollTop;
+			const scrollBottom = scrollTop + listContainer.clientHeight;
+			const startIndex = Math.floor(scrollTop / itemHeight);
+			const endIndex = Math.ceil(scrollBottom / itemHeight);
+			setVisibleItems(
+				items.slice(startIndex, endIndex).map((item, index) => {
+					return { ...item, position: startIndex + index };
+				})
+			);
+		}
+	}
 
-  useEffect(() => {
-    // Do fetch here...
-    // Triggers when "debouncedValue" changes
-    console.log("DEB", debouncedValue);
-  }, [debouncedValue]);
+	function scrollToTop() {
+		if (listContainerRef.current != null) {
+			listContainerRef.current.scrollTop = 0;
+		}
+	}
 
-  const handleEndScroll = useMemo(
-    () => console.log("END SCROLL"),
-    //_.debounce(() => console.log("END SCROLL"), 1000),
-    []
-  );
+	useEffect(() => {
+		//Scroll to last item on the bottom of the list
+		setScroll((items.length - 1) * itemHeight);
+		if (listContainerRef.current != null) {
+			listContainerRef.current.scrollTop = scroll;
+		}
+	}, [items.length]);
 
-  function handleScroll(event: React.UIEvent<HTMLDivElement, UIEvent>) {
-    setValue(Date.now());
+	useEffect(() => {
+		if (userAction && userAction.type === "scroll-top") {
+			scrollToTop();
+		}
+	}, [userAction]);
 
-    const outerContainer = outerContainerRef.current;
-    if (outerContainer !== null) {
-      const scrollTop = outerContainer.scrollTop;
-      const scrollBottom = scrollTop + outerContainer.clientHeight;
-      const startIndex = Math.floor(scrollTop / itemHeight);
-      const endIndex = Math.ceil(scrollBottom / itemHeight);
-      setVisibleItems(
-        items.slice(startIndex, endIndex).map((item, index) => {
-          return { ...item, position: startIndex + index };
-        })
-      );
-    }
-  }
-
-  function scrollToTop() {
-    if (outerContainerRef.current != null)
-      outerContainerRef.current.scrollTop = 0;
-  }
-
-  useEffect(() => {
-    //Scroll to last item on the bottom of the list
-    setScroll(items.length * itemHeight - itemOffset);
-    if (outerContainerRef.current != null) {
-      outerContainerRef.current.scrollTop = scroll;
-    }
-  }, [items.length]);
-
-  return (
-    <>
-      <div className={styles.container}>
-        <VirtualizedListHeader columns={Object.keys(items[0])} />
-        <div
-          data-testid="outer-container"
-          className={styles.outerContainer}
-          onScroll={handleScroll}
-          ref={outerContainerRef}
-        >
-          <ul className={styles.list} style={{ height: listContainerHeight }}>
-            {visibleItems.map((item) => {
-              return (
-                <ListItem
-                  key={item.id}
-                  item={item}
-                  index={item.position}
-                  height={itemHeight}
-                />
-              );
-            })}
-          </ul>
-        </div>
-      </div>
-      <button onClick={scrollToTop}>Scroll to Top</button>
-    </>
-  );
+	return (
+		<div className={styles.container}>
+			<VirtualizedListHeader
+				columns={Object.keys(items[0])}
+				className={styles.listHeader}
+			/>
+			<div
+				className={styles.listContainer}
+				onScroll={handleScroll}
+				ref={listContainerRef}
+			>
+				<ul className={styles.list} style={{ height: listContainerHeight }}>
+					{visibleItems.map((item) => (
+						<ListItem
+							key={item.id}
+							item={item}
+							index={item.position}
+							height={itemHeight}
+						/>
+					))}
+				</ul>
+			</div>
+		</div>
+	);
 }

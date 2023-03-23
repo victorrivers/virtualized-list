@@ -1,8 +1,6 @@
 .header {
-	height: 100px;
 	display: flex;
 	justify-content: space-between;
-	margin-right: 10px;
 }
 
 .col {
@@ -12,8 +10,8 @@
 	width: 100%;
 	font-size: 1.2rem;
 	font-weight: 600;
-	border: 1px solid #FFFFFF;
-	border-bottom: 2px solid #FFFFFF;
+	border: 1px solid var(--border-default-color);
+	border-bottom: 2px solid var(--border-default-color);
 }
 
 .col:nth-child(1) {
